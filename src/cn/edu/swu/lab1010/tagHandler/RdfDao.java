@@ -38,7 +38,7 @@ public class RdfDao {
 	 * 返回迭代标签值的迭代器
 	 * 
 	 * @param model
-	 * @retu NodeIterator
+	 * @return NodeIterator
 	 */
 	public final NodeIterator listObjectWithlabel(Model model) {
 
