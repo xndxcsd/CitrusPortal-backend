@@ -1,6 +1,8 @@
 package cn.edu.swu.lab1010.tagHandler;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.*;

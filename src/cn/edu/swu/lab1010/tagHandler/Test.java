@@ -11,9 +11,12 @@ public class Test {
 		RdfDao rdfdao = new RdfDao();
 		Model model = null;
 		try {
-			
+			//将储存着标签的rdf读到model中
 			model = rdfdao.readTagRdf(TAGFILEPATH);
+			//得到迭代标签的迭代器，测试代码在方法体中
 			rdfdao.listObjectWithlabel(model);
+			//
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
