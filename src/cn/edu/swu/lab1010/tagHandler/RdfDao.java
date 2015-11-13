@@ -77,15 +77,21 @@ public class RdfDao {
 			RDFNode node = iter.nextNode();
 			labelSet.add(node.toString());
 		}
+
+//		for (String string : labelSet) {
+//			System.out.println(string);
+//		}
+
 		// 返回该规则集
 		return labelSet;
 	}
 
 	/**
 	 * 传入匹配成功的label，返回由其对应的资源和其前驱，前驱的前驱，后继组成的jena Model
+	 * 
 	 * @param String
 	 * @return Model
-	 */ 
+	 */
 	public final Model searchByLabel(String label) {
 		// resultModel用来存放查找的结果，这里我们将查找的结果重新构造成一张图
 		Model resultModel = ModelFactory.createDefaultModel();
@@ -114,30 +120,30 @@ public class RdfDao {
 			StmtIterator subStmtIter = this.getSub(res);
 			resultModel.add(subStmtIter);
 		}
-		
+
 		return resultModel;
 	}
-	
+
 	/**
 	 * 得到某一个资源的前驱,返回该资源作为宾语的陈述迭代器
+	 * 
 	 * @param Resource
 	 * @return StmtIterator
 	 */
 	private final StmtIterator getPre(Resource res) {
 
-		StmtIterator preStmtIter = model.listStatements(
-									new SimpleSelector(null,null,res));
+		StmtIterator preStmtIter = model.listStatements(new SimpleSelector(null, null, res));
 		return preStmtIter;
 	}
 
 	/**
 	 * 得到某一个资源的后继，返回该资源作为主语的陈述迭代器
+	 * 
 	 * @param Resource
 	 * @return StmtIterator
 	 */
 	private final StmtIterator getSub(Resource res) {
-		StmtIterator subStmtIter = model.listStatements(
-				new SimpleSelector(res, null, (RDFNode) null));
+		StmtIterator subStmtIter = model.listStatements(new SimpleSelector(res, null, (RDFNode) null));
 		return subStmtIter;
 	}
 

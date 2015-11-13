@@ -1,10 +1,7 @@
 package cn.edu.swu.lab1010.tagHandler;
 
-import java.util.regex.Pattern;
-
-import org.apache.jena.rdf.model.Model;
-
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 实现匹配
