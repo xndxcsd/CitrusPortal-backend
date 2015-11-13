@@ -1,6 +1,7 @@
 package cn.edu.swu.lab1010.tagHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.apache.jena.rdf.model.Model;
@@ -23,8 +24,13 @@ public class Test {
 				RdfMatch matcher = new RdfMatch(label, stringBuilder);
 				if (matcher.match()) {
 //					System.out.println("此次匹配是成功的");
-					Model model = rdfdao.searchByLabel(label);
-					model.write(System.out,"RDF/XML-ABBREV");
+					ArrayList<ResultData> resultList = rdfdao.searchByLabel(label);
+					for (ResultData resultData : resultList) {//测试该列表中是否有数据
+						System.out.println("self : "+resultData.getSelf());
+						System.out.println("pre : "+resultData.getPre());
+						System.out.println("prepre : "+resultData.getPrepre());
+						System.out.println("sub : "+resultData.getSub());
+					}
 				}
 				
 			}

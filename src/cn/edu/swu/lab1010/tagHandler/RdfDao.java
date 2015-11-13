@@ -1,17 +1,13 @@
 package cn.edu.swu.lab1010.tagHandler;
 
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.*;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.NodeIterator;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.SimpleSelector;
-import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
+
+import com.github.jsonldjava.core.RDFDataset.BlankNode;
 
 /**
  * @author csd
@@ -78,9 +74,9 @@ public class RdfDao {
 			labelSet.add(node.toString());
 		}
 
-//		for (String string : labelSet) {
-//			System.out.println(string);
-//		}
+		// for (String string : labelSet) {
+		// System.out.println(string);
+		// }
 
 		// 返回该规则集
 		return labelSet;
@@ -90,41 +86,58 @@ public class RdfDao {
 	 * 传入匹配成功的label，返回由其对应的资源和其前驱，前驱的前驱，后继组成的jena Model
 	 * 
 	 * @param String
-	 * @return Model
+	 * @return List<ResultData>
 	 */
-	public final Model searchByLabel(String label) {
-		// resultModel用来存放查找的结果，这里我们将查找的结果重新构造成一张图
-		Model firstModel = ModelFactory.createDefaultModel();
-		Model secondModel = ModelFactory.createDefaultModel();
-		Model finalModel = ModelFactory.createDefaultModel();
-		// 返回一个宾语为label的所有陈述的迭代器
-		StmtIterator stmtIter = model.listStatements(new SimpleSelector(null, null, label));
-		// 将其加入到resultModel中
-		firstModel.add(stmtIter);
-		// 得到前驱和前驱的前驱的循环
-		while (stmtIter.hasNext()) {
-			// 得到标签值为label的资源
-			Resource res = stmtIter.nextStatement().getSubject();
-			// 得到宾语为该资源的陈述，主语为前驱的迭代器，并将其加入resultModel中
-			StmtIterator preStmtIter = this.getPre(res);
-			secondModel=firstModel.union(ModelFactory.createDefaultModel().add(preStmtIter));
-//			resultModel.add(preStmtIter);
-			// 遍历该迭代器
-			while (preStmtIter.hasNext()) {
-				// 重复以上操作得到存储前驱的前驱的陈述，将其加入到resultModel中
-				Resource preRes = preStmtIter.nextStatement().getSubject();
-				StmtIterator prePreIter = this.getPre(preRes);
-				finalModel = secondModel.union(ModelFactory.createDefaultModel().add(prePreIter));
-			}
-		}
-		// 得到后继的循环
-		while (stmtIter.hasNext()) {
-			Resource res = stmtIter.nextStatement().getSubject();
-			StmtIterator subStmtIter = this.getSub(res);
-			finalModel.union(ModelFactory.createDefaultModel().add(subStmtIter));
-		}
+	public final ArrayList<ResultData> searchByLabel(String label) {
 
-		return finalModel;
+		ArrayList<ResultData> resultList = new ArrayList<ResultData>();
+		StmtIterator selfStmtIter = model.listStatements(new SimpleSelector(null, null, label));
+
+		while (selfStmtIter.hasNext()) {
+			Statement selfStmt = selfStmtIter.nextStatement();
+			Resource self = selfStmt.getSubject();
+			StmtIterator preStmtIter = this.getPre(self);
+			while (preStmtIter.hasNext()) {
+				Statement preStmt = preStmtIter.nextStatement();
+				Resource preRes = preStmt.getSubject();
+				StmtIterator prePreStmtIter = this.getPre(preRes);
+				while (prePreStmtIter.hasNext()) {
+					Statement prePreStmt = prePreStmtIter.nextStatement();
+					Resource prePreRes = prePreStmt.getSubject();
+					StmtIterator subStmtIter = this.getSub(self);
+					while (subStmtIter.hasNext()) {
+						Statement subStmt = subStmtIter.nextStatement();
+						RDFNode subNode =subStmt.getObject();
+												
+						String selfLabel = " ";
+						String preLabel = " ";
+						String prePreLabel = " ";
+						String subLabel = " ";
+						if(selfStmt.getObject()!=null)
+						selfLabel = selfStmt.getObject().toString();
+						if(preRes.getProperty(RDFS.label).getObject()!=null)
+						preLabel = preRes.getProperty(RDFS.label).getObject().toString();
+						if(prePreRes.getProperty(RDFS.label).getObject()!=null)
+						prePreLabel = prePreRes.getProperty(RDFS.label).getObject().toString();
+						
+						if(subNode==null) {
+							subLabel =" ";
+						}else if(subNode instanceof BlankNode) {
+							subLabel = " ";
+						}else if(subNode instanceof Resource) {
+							Resource subRes = (Resource)subNode;
+							subLabel = subRes.getProperty(RDFS.label).getObject().toString();
+						}else 
+							subLabel = subNode.toString();
+						
+						ResultData result = new ResultData(selfLabel, preLabel, prePreLabel, subLabel);
+						resultList.add(result);
+					}
+				}
+			}
+
+		}
+		return resultList;
 	}
 
 	/**
