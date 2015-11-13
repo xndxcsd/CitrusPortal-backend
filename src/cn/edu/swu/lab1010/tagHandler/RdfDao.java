@@ -14,7 +14,7 @@ import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
 
 /**
- * @author Alexi
+ * @author csd
  */
 public class RdfDao {
 

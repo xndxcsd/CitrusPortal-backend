@@ -1,42 +1,37 @@
 package cn.edu.swu.lab1010.tagHandler;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
+/**
+ * 这个类要完成对需要匹配的文章的一些操作
+ * @author csd
+ *
+ */
 public class FileDao {
 
-	private static String filePath;
+	private String filePath;
 
 	public FileDao(String filePath) {
 		this.filePath = filePath;
 	}
 
-	protected final StringBuilder read() throws IOException {
-		//给一个流读文件
-		DataInputStream in = new DataInputStream(
-				new BufferedInputStream(
-						new FileInputStream(new File(filePath))));
-		//给一个字符串构造器将文件读入
+	public final StringBuilder read() throws IOException {
+		BufferedReader reader = new BufferedReader(
+									new FileReader(
+										new File(filePath)));
 		StringBuilder stringBuilder = new StringBuilder();
-		String content="";
-		while (content!=null) {
-			
-			
-			if (content==null)
+		String strLine;
+		while(true){
+			strLine = reader.readLine();
+			if (strLine.equals(null)) 
 				break;
-			
-			
+			stringBuilder.append(reader.readLine());
 		}
-		
-		
-		return null;
+		return stringBuilder;
 	}
-
+	
+	
 }
