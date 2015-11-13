@@ -7,10 +7,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.SimpleSelector;
-import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
@@ -85,19 +83,62 @@ public class RdfDao {
 
 	/**
 	 * 传入匹配成功的label，返回由其对应的资源和其前驱，前驱的前驱，后继组成的jena Model
-	 * @param label
-	 */
-	public final void searchByLabel(String label) {
-		//resultModel用来存放查找的结果，这里我们将查找的结果重新构造成一张图
+	 * @param String
+	 * @return Model
+	 */ 
+	public final Model searchByLabel(String label) {
+		// resultModel用来存放查找的结果，这里我们将查找的结果重新构造成一张图
 		Model resultModel = ModelFactory.createDefaultModel();
-		//返回一个属性值为label的所有属性的迭代器
-		ResIterator resIter = model.listResourcesWithProperty(RDFS.label, label);
-		//将这个迭代器中的所有资源添加到resultModel中
-		while (resIter.hasNext()){
-			Resource res = resIter.next();
-			
+		// 返回一个宾语为label的所有陈述的迭代器
+		StmtIterator stmtIter = model.listStatements(new SimpleSelector(null, null, label));
+		// 将其加入到resultModel中
+		resultModel.add(stmtIter);
+		// 得到前驱和前驱的前驱的循环
+		while (stmtIter.hasNext()) {
+			// 得到标签值为label的资源
+			Resource res = stmtIter.nextStatement().getSubject();
+			// 得到宾语为该资源的陈述，主语为前驱的迭代器，并将其加入resultModel中
+			StmtIterator preStmtIter = this.getPre(res);
+			resultModel.add(preStmtIter);
+			// 遍历该迭代器
+			while (preStmtIter.hasNext()) {
+				// 重复以上操作得到存储前驱的前驱的陈述，将其加入到resultModel中
+				Resource preRes = preStmtIter.nextStatement().getSubject();
+				StmtIterator prePreIter = this.getPre(preRes);
+				resultModel.add(prePreIter);
+			}
+		}
+		// 得到后继的循环
+		while (stmtIter.hasNext()) {
+			Resource res = stmtIter.nextStatement().getSubject();
+			StmtIterator subStmtIter = this.getSub(res);
+			resultModel.add(subStmtIter);
 		}
 		
+		return resultModel;
+	}
+	
+	/**
+	 * 得到某一个资源的前驱,返回该资源作为宾语的陈述迭代器
+	 * @param Resource
+	 * @return StmtIterator
+	 */
+	private final StmtIterator getPre(Resource res) {
+
+		StmtIterator preStmtIter = model.listStatements(
+									new SimpleSelector(null,null,res));
+		return preStmtIter;
+	}
+
+	/**
+	 * 得到某一个资源的后继，返回该资源作为主语的陈述迭代器
+	 * @param Resource
+	 * @return StmtIterator
+	 */
+	private final StmtIterator getSub(Resource res) {
+		StmtIterator subStmtIter = model.listStatements(
+				new SimpleSelector(res, null, (RDFNode) null));
+		return subStmtIter;
 	}
 
 	/**
