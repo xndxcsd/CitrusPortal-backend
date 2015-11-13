@@ -94,34 +94,37 @@ public class RdfDao {
 	 */
 	public final Model searchByLabel(String label) {
 		// resultModel用来存放查找的结果，这里我们将查找的结果重新构造成一张图
-		Model resultModel = ModelFactory.createDefaultModel();
+		Model firstModel = ModelFactory.createDefaultModel();
+		Model secondModel = ModelFactory.createDefaultModel();
+		Model finalModel = ModelFactory.createDefaultModel();
 		// 返回一个宾语为label的所有陈述的迭代器
 		StmtIterator stmtIter = model.listStatements(new SimpleSelector(null, null, label));
 		// 将其加入到resultModel中
-		resultModel.add(stmtIter);
+		firstModel.add(stmtIter);
 		// 得到前驱和前驱的前驱的循环
 		while (stmtIter.hasNext()) {
 			// 得到标签值为label的资源
 			Resource res = stmtIter.nextStatement().getSubject();
 			// 得到宾语为该资源的陈述，主语为前驱的迭代器，并将其加入resultModel中
 			StmtIterator preStmtIter = this.getPre(res);
-			resultModel.add(preStmtIter);
+			secondModel=firstModel.union(ModelFactory.createDefaultModel().add(preStmtIter));
+//			resultModel.add(preStmtIter);
 			// 遍历该迭代器
 			while (preStmtIter.hasNext()) {
 				// 重复以上操作得到存储前驱的前驱的陈述，将其加入到resultModel中
 				Resource preRes = preStmtIter.nextStatement().getSubject();
 				StmtIterator prePreIter = this.getPre(preRes);
-				resultModel.add(prePreIter);
+				finalModel = secondModel.union(ModelFactory.createDefaultModel().add(prePreIter));
 			}
 		}
 		// 得到后继的循环
 		while (stmtIter.hasNext()) {
 			Resource res = stmtIter.nextStatement().getSubject();
 			StmtIterator subStmtIter = this.getSub(res);
-			resultModel.add(subStmtIter);
+			finalModel.union(ModelFactory.createDefaultModel().add(subStmtIter));
 		}
 
-		return resultModel;
+		return finalModel;
 	}
 
 	/**

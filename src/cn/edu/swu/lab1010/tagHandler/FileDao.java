@@ -32,7 +32,7 @@ public class FileDao {
 			stringBuilder.append(strLine);
 		}
 		reader.close();
-		System.out.println(stringBuilder.toString().substring(1,6));
+//		System.out.println(stringBuilder.toString());
 		
 		return stringBuilder;
 	}
