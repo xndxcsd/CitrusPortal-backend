@@ -48,16 +48,20 @@ public class ResultData {
 	 * 如果这条数据就是直接的匹配本身，那么还包括直接匹配的内容和匹配的位置
 	 * 
 	 */
+	//所有的数据都具有URI，	label，relation
 	
 	public final String URI;
 	public final String label;
+	
 	//relation用来表示与直接的匹配间的关系 规定有n层关系relation的值就为n	
 	public final int relation;
-	//设置一个int限制如果这条数据是匹配本身时，确保其不能被重复的赋值
-	private int beGiveValue=0;
 	
-	private String 
-	
+	//设置两个boolean变量限制如果这条数据是匹配本身时，确保其不能被重复的赋值	
+	private boolean isGivenRow = false;
+	private boolean isGivenPosition = false;
+	//如果这条数据是直接的匹配，还需要将匹配到的内容和匹配的位置保存在对象中
+	private int row;
+	private int position;
 	//	在构造方法中为final域赋值，并且在该类中将不会给出setter防止值被篡改
 	public ResultData() {
 		// TODO Auto-generated constructor stub
@@ -72,7 +76,67 @@ public class ResultData {
 		this.URI = URI;
 		this.label = label;
 	}
+//URI,Label,relation没有setter方法。
+	public String getURI() {
+		return URI;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public int getRelation() {
+		return relation;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void setRow(int row) {
+		if (isGivenRow)
+			System.out.println("row只能被赋值一次");
+		else {
+			this.row = row;
+			isGivenRow =!isGivenRow;
+		}
+	}
+
+	public boolean isGivenRow() {
+		return isGivenRow;
+	}
 	
+	/*
+	 * isGivenName用来标志row和position是否被赋值，以此来保证不会重复赋值
+	public void setGivenRow(boolean isGivenRow) {
+		this.isGivenRow = isGivenRow;
+	}
+	 */
+	
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		
+		
+		
+		this.position = position;
+	}
+
+	public boolean isGivenPosition() {
+		return isGivenPosition;
+	}
+	/*
+	 * isGivenPosition用来标志position是否被赋值，以此来保证不会重复赋值
+	public void setGivenPosition(boolean isGivenPosition) {
+		this.isGivenPosition = isGivenPosition;
+	}
+	 */
+	public void setGivenPosition(boolean isGivenPosition) {
+		this.isGivenPosition = isGivenPosition;
+	}
+
 	
 	
 	
