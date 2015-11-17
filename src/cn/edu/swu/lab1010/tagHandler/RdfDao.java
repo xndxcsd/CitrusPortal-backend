@@ -130,8 +130,8 @@ public class RdfDao {
 						}else 
 							subLabel = subNode.toString();
 						
-						ResultData result = new ResultData(selfLabel, preLabel, prePreLabel, subLabel);
-						resultList.add(result);
+//						ResultData result = new ResultData(selfLabel, preLabel, prePreLabel, subLabel);
+//						resultList.add(result);
 					}
 				}
 			}
