@@ -88,20 +88,39 @@ public class RdfDao {
 	 * @param String
 	 * @return List<ResultData>
 	 */
-	public final ArrayList<ResultData> searchByLabel(String label) {
+	public final HashSet<ResultData> searchByLabel(String label) {
 
-		ArrayList<ResultData> resultList = new ArrayList<ResultData>();
+		HashSet<ResultData> resultSet = new HashSet<ResultData>();
 		StmtIterator selfStmtIter = model.listStatements(new SimpleSelector(null, null, label));
 
 		while (selfStmtIter.hasNext()) {
+			//得到直接匹配的资源
 			Statement selfStmt = selfStmtIter.nextStatement();
 			Resource self = selfStmt.getSubject();
+			
+			//将直接匹配的信息存放在ResultData对象中，并放进resultSet中
+			String selfLabel = self.getProperty(RDFS.label).getObject().toString();
+			String uriStr = self.getURI();
+			ResultData selfData = new ResultData(0, uriStr, selfLabel);
+			resultSet.add(selfData);
+			
+			//得到前驱并遍历
 			StmtIterator preStmtIter = this.getPre(self);
 			while (preStmtIter.hasNext()) {
+				//得到前驱资源
 				Statement preStmt = preStmtIter.nextStatement();
 				Resource preRes = preStmt.getSubject();
+				
+				//将前驱的信息存放在ResultData对象中，并放进resultSet中
+				String preLabel = preRes.getProperty(RDFS.label).getObject().toString();
+				String preuriStr = self.getURI();
+				ResultData preData = new ResultData(1, preuriStr,preLabel);
+				resultSet.add(preData);
+				
+				//得到前驱的前驱并遍历
 				StmtIterator prePreStmtIter = this.getPre(preRes);
 				while (prePreStmtIter.hasNext()) {
+					//得到前前驱资源
 					Statement prePreStmt = prePreStmtIter.nextStatement();
 					Resource prePreRes = prePreStmt.getSubject();
 					StmtIterator subStmtIter = this.getSub(self);
@@ -109,14 +128,12 @@ public class RdfDao {
 						Statement subStmt = subStmtIter.nextStatement();
 						RDFNode subNode =subStmt.getObject();
 												
-						String selfLabel = " ";
-						String preLabel = " ";
-						String prePreLabel = " ";
+						
 						String subLabel = " ";
+						String prePreLabel = " ";
 						if(selfStmt.getObject()!=null)
-						selfLabel = selfStmt.getObject().toString();
+						
 						if(preRes.getProperty(RDFS.label).getObject()!=null)
-						preLabel = preRes.getProperty(RDFS.label).getObject().toString();
 						if(prePreRes.getProperty(RDFS.label).getObject()!=null)
 						prePreLabel = prePreRes.getProperty(RDFS.label).getObject().toString();
 						
@@ -137,7 +154,7 @@ public class RdfDao {
 			}
 
 		}
-		return resultList;
+		return resultSet;
 	}
 
 	/**
@@ -171,4 +188,22 @@ public class RdfDao {
 	public Model getModel() {
 		return model;
 	}
+
+	public ResultData extractDataFromResToResultData(Resource res,int relation) {
+		
+		
+		return null;
+	}
+	
+//	public ResultData extractDataFromResToResultData(Resource res,int relation,int row,int position) {
+//		String selfLabel = res.getProperty(RDFS.label).getObject().toString();
+//		String uriStr = res.getURI();
+//		ResultData aData = new ResultData(0, uriStr, selfLabel);
+//		
+//		return null;
+//	}
+//	
+	
+	
+	
 }

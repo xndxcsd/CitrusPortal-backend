@@ -107,7 +107,7 @@ public class ResultData {
 	}
 	
 	/*
-	 * isGivenName用来标志row和position是否被赋值，以此来保证不会重复赋值
+	 * isGivenRow用来标志row是否被赋值，以此来保证不会重复赋值
 	public void setGivenRow(boolean isGivenRow) {
 		this.isGivenRow = isGivenRow;
 	}
@@ -137,22 +137,6 @@ public class ResultData {
 		this.isGivenPosition = isGivenPosition;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 }

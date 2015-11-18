@@ -24,7 +24,7 @@ public class Test {
 				RdfMatch matcher = new RdfMatch(label, stringBuilder);
 				if (matcher.match()) {
 //					System.out.println("此次匹配是成功的");
-					ArrayList<ResultData> resultList = rdfdao.searchByLabel(label);
+					HashSet<ResultData> resultList = rdfdao.searchByLabel(label);
 					for (ResultData resultData : resultList) {//测试该列表中是否有数据
 //						System.out.println("self : "+resultData.getSelf());
 //						System.out.println("pre : "+resultData.getPre());
