@@ -1,13 +1,18 @@
 package cn.edu.swu.lab1010.tagHandler;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashSet;
 
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.SimpleSelector;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
-
-import com.github.jsonldjava.core.RDFDataset.BlankNode;
 
 /**
  * @author csd
@@ -99,9 +104,10 @@ public class RdfDao {
 			Resource self = selfStmt.getSubject();
 			
 			//将直接匹配的信息存放在ResultData对象中，并放进resultSet中
-			String selfLabel = self.getProperty(RDFS.label).getObject().toString();
-			String uriStr = self.getURI();
-			ResultData selfData = new ResultData(0, uriStr, selfLabel);
+//			String selfLabel = self.getProperty(RDFS.label).getObject().toString();
+//			String uriStr = self.getURI();
+//			ResultData selfData = new ResultData(0, uriStr, selfLabel);
+			ResultData selfData = this.extractDataFromResToResultData(self, 0);
 			resultSet.add(selfData);
 			
 			//得到前驱并遍历
@@ -112,9 +118,7 @@ public class RdfDao {
 				Resource preRes = preStmt.getSubject();
 				
 				//将前驱的信息存放在ResultData对象中，并放进resultSet中
-				String preLabel = preRes.getProperty(RDFS.label).getObject().toString();
-				String preuriStr = self.getURI();
-				ResultData preData = new ResultData(1, preuriStr,preLabel);
+				ResultData preData = this.extractDataFromResToResultData(preRes, 1);
 				resultSet.add(preData);
 				
 				//得到前驱的前驱并遍历
@@ -123,36 +127,24 @@ public class RdfDao {
 					//得到前前驱资源
 					Statement prePreStmt = prePreStmtIter.nextStatement();
 					Resource prePreRes = prePreStmt.getSubject();
-					StmtIterator subStmtIter = this.getSub(self);
-					while (subStmtIter.hasNext()) {
-						Statement subStmt = subStmtIter.nextStatement();
-						RDFNode subNode =subStmt.getObject();
-												
-						
-						String subLabel = " ";
-						String prePreLabel = " ";
-						if(selfStmt.getObject()!=null)
-						
-						if(preRes.getProperty(RDFS.label).getObject()!=null)
-						if(prePreRes.getProperty(RDFS.label).getObject()!=null)
-						prePreLabel = prePreRes.getProperty(RDFS.label).getObject().toString();
-						
-						if(subNode==null) {
-							subLabel =" ";
-						}else if(subNode instanceof BlankNode) {
-							subLabel = " ";
-						}else if(subNode instanceof Resource) {
-							Resource subRes = (Resource)subNode;
-							subLabel = subRes.getProperty(RDFS.label).getObject().toString();
-						}else 
-							subLabel = subNode.toString();
-						
-//						ResultData result = new ResultData(selfLabel, preLabel, prePreLabel, subLabel);
-//						resultList.add(result);
-					}
+					//将前前驱的信息存放在ResultData对象中，并放进resultSet中
+					ResultData prePreData = this.extractDataFromResToResultData(prePreRes, 2);
+					resultSet.add(prePreData);
+					
+					
 				}
 			}
-
+			StmtIterator subStmtIter = this.getSub(self);
+			while (subStmtIter.hasNext()) {
+				//得到后驱资源
+				Statement subStmt = subStmtIter.nextStatement();
+				RDFNode subNode =subStmt.getObject();
+				//将后驱的信息存放在ResultData对象中，并放进resultSet中
+				if (subNode instanceof Resource) {
+					ResultData subData = this.extractDataFromResToResultData((Resource)subNode, 1);
+					resultSet.add(subData);
+				}
+			}
 		}
 		return resultSet;
 	}
@@ -190,9 +182,11 @@ public class RdfDao {
 	}
 
 	public ResultData extractDataFromResToResultData(Resource res,int relation) {
+		String selfLabel = res.getProperty(RDFS.label).getObject().toString();
+		String uriStr = res.getURI();
+		ResultData resData = new ResultData(relation, uriStr, selfLabel);
 		
-		
-		return null;
+		return resData;
 	}
 	
 //	public ResultData extractDataFromResToResultData(Resource res,int relation,int row,int position) {
