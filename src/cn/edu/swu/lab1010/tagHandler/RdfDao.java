@@ -11,6 +11,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.sparql.function.library.e;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
 
@@ -187,7 +188,11 @@ public class RdfDao {
 	private ResultData extractDataFromResToResultData(Resource res, int relation) {
 		// TODO Auto-generated method stub
 		//selfLabel 存放的是res这个资源的label
-		String selfLabel = res.getProperty(RDFS.label).getObject().toString();
+		String selfLabel;
+		if (null != res.getProperty(RDFS.label))
+			selfLabel = res.getProperty(RDFS.label).getObject().toString();
+		else 
+			selfLabel = "null";
 		String uriStr = res.getURI();
 		ResultData resData = new ResultData(relation, uriStr, selfLabel);
 		return resData;

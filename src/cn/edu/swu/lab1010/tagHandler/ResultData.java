@@ -84,7 +84,7 @@ public class ResultData {
 		// TODO Auto-generated constructor stub
 		this.URI = " ";
 		this.label =" ";
-		this.relation = 0;
+		this.relation = -10;
 	}
 	
 	public ResultData(int relation,String URI,String label) {
@@ -108,6 +108,8 @@ public class ResultData {
 	}
 
 	public int getRow() {
+		if (0 == row) 
+			return -1;
 		return row;
 	}
 
@@ -132,6 +134,8 @@ public class ResultData {
 	 */
 	
 	public int getPosition() {
+		if (0 == position)
+			return -1;
 		return position;
 	}
 

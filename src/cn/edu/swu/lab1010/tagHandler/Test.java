@@ -23,13 +23,15 @@ public class Test {
 			for (String label : labelSet) {
 				RdfMatch matcher = new RdfMatch(label, stringBuilder);
 				if (matcher.match()) {
-//					System.out.println("此次匹配是成功的");
-					HashSet<ResultData> resultList = rdfdao.searchByLabel(label);
-					for (ResultData resultData : resultList) {//测试该列表中是否有数据
-						
-					}
+					//	debug:
+					System.out.println("此次匹配是成功的");
+					HashSet<ResultData> resultSet = rdfdao.searchByLabel(label);
+					
+					XmlWriter writer = new XmlWriter(resultSet);
+					//	debug:			
+					writer.printToConsole();
+					
 				}
-				
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

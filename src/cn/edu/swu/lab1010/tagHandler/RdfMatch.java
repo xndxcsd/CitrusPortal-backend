@@ -1,5 +1,6 @@
 package cn.edu.swu.lab1010.tagHandler;
 
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,7 +57,7 @@ public class RdfMatch {
 	 */
 	public final String getStringOfMatch() throws Exception {
 		if (!this.match())
-			throw new Exception("未匹配成功无法得到匹配字符串");
+			return "null";
 		return stringOfMatch;
 	}
 
@@ -66,7 +67,8 @@ public class RdfMatch {
 	 * @return start
 	 */
 	public final int getStartOfMatch() {
-
+		if (!this.match())
+			return 0;
 		return start;
 	}
 
@@ -76,8 +78,20 @@ public class RdfMatch {
 	 * @return end
 	 */
 	public final int getEndOfMatch() {
-
+		if (!this.match()) 
+			return -1;
 		return end;
 	}
 
-}
+	public final HashSet<ResultData> addLocation(HashSet<ResultData> resultSet) {
+		for (ResultData resultData : resultSet) {
+			
+				
+			
+			
+			
+		}
+			
+		return null;
+	}
+	}

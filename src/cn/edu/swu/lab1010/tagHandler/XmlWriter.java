@@ -1,4 +1,6 @@
 package cn.edu.swu.lab1010.tagHandler;
+import java.util.HashSet;
+
 import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 
 import javafx.scene.chart.PieChart.Data;
@@ -17,28 +19,39 @@ import javafx.scene.chart.PieChart.Data;
  */
 
 public class XmlWriter {
-	private ResultData DataObject;
-	
+	private HashSet<ResultData> dataSet;
 	public XmlWriter() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 	
-	public XmlWriter(ResultData DataObject) {
-		this.DataObject = DataObject;
+	public XmlWriter(HashSet<ResultData> dataSet) {
+		this.dataSet = dataSet;
 	}
-	
-	
 	/**
 	 * <p>wirte to file by dom4j ,a XML tool for java .
 	 * <p>
 	 * @throws Exception 
 	 */
-	private final void write() throws Exception{
-		if (null == DataObject)
+	public final void write() throws Exception{
+		//todo
+		if (null == null)
 			throw new Exception("no dataobject");
 		else {
 			
+		}
+		
+	}
+	
+	public final void printToConsole() {
+		for (ResultData resultData : dataSet) {//测试该列表中是否有数据
+			System.out.println(resultData.getMappedString());
+			System.out.println(resultData.getLabel());
+			System.out.println(resultData.getURI());
+			System.out.println(resultData.getRelation());
+			System.out.println(resultData.getRow());
+			System.out.println(resultData.getPosition());
+			System.out.println();
 		}
 		
 	}
