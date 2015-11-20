@@ -1,7 +1,5 @@
 package cn.edu.swu.lab1010.tagHandler;
 
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
-
 /**
  * <p>
  * 这个类的对象储存着检索到信息<br>
@@ -55,10 +53,10 @@ public class ResultData {
 	public final String URI;
 	public final String label;
 	//mappedString 用来表示这一条数据是跟哪个直接匹配的标签有关系。
-	private static String staticmappedString;
-	private String mappedString;
+	private static String staticRelativeMappedString;
+	private String relativeMappedString;
 	//relation用来表示与直接的匹配间的关系 规定有n层关系relation的值就为n	
-	public final int relation;
+	private final int relation;
 	
 	//设置两个boolean变量限制如果这条数据是匹配本身时，确保其不能被重复的赋值	
 	private boolean isGivenRow = false;
@@ -66,17 +64,46 @@ public class ResultData {
 	//如果这条数据是直接的匹配，还需要将匹配到的内容和匹配的位置保存在对象中
 	private int row;
 	private int position;
+	private String straightMappedString;
+	private int start;
+	private int end;
 	
-	public String getMappedString() {
-		return mappedString;
+	
+	public String getStraightMappedString() {
+		if (straightMappedString==null) return "null";
+		return straightMappedString;
+	}
+
+	public void setStraightMappedString(String straightMappedString) {
+		this.straightMappedString = straightMappedString;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+
+	public String getRelativeMappedString() {
+		return relativeMappedString;
 	}
 
 	public static void setStaticMappedString(String mappedString) {
-		ResultData.staticmappedString = mappedString;
+		ResultData.staticRelativeMappedString = mappedString;
 	}
-	public void setMappedString() {
-		if (null != staticmappedString)
-			this.mappedString = ResultData.staticmappedString;
+	public void setRelativeMappedString() {
+		if (null != staticRelativeMappedString)
+			this.relativeMappedString = ResultData.staticRelativeMappedString;
 	}
 	
 	//	在构造方法中为final域赋值，并且在该类中将不会给出setter防止值被篡改
@@ -92,7 +119,7 @@ public class ResultData {
 		this.relation = relation;
 		this.URI = URI;
 		this.label = label;
-		this.setMappedString();
+		this.setRelativeMappedString();
 	}
 //URI,Label,relation没有setter方法。
 	public String getURI() {

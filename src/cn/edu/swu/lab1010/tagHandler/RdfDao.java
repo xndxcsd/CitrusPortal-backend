@@ -93,6 +93,7 @@ public class RdfDao {
 	 * 
 	 * @param String
 	 * @return List<ResultData>
+	 * @throws Exception 
 	 */
 	public final HashSet<ResultData> searchByLabel(String label) {
 		//将resultData类的静态变量MappedString设置成label

@@ -45,12 +45,16 @@ public class XmlWriter {
 	
 	public final void printToConsole() {
 		for (ResultData resultData : dataSet) {//测试该列表中是否有数据
-			System.out.println(resultData.getMappedString());
+			
+			System.out.println(resultData.getRelativeMappedString());
 			System.out.println(resultData.getLabel());
 			System.out.println(resultData.getURI());
 			System.out.println(resultData.getRelation());
 			System.out.println(resultData.getRow());
 			System.out.println(resultData.getPosition());
+			System.out.println("start :"+resultData.getStart());
+			System.out.println("end :"+resultData.getEnd());
+			System.out.println("straight :"+resultData.getStraightMappedString());
 			System.out.println();
 		}
 		

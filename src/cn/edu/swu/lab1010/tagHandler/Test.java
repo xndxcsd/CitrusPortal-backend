@@ -11,7 +11,7 @@ public class Test {
 	
 	private static String TAGFILEPATH = "C:\\Users\\csd\\Desktop\\CitrusTest1.1_modified杜.rdf";
 	private static String FILEPATH = "C:\\Users\\csd\\Desktop\\testfile.txt";
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		long start = System.currentTimeMillis();
 		RdfDao rdfdao = new RdfDao(TAGFILEPATH);
 		FileDao filedao = new FileDao(FILEPATH);
@@ -26,8 +26,8 @@ public class Test {
 					//	debug:
 					System.out.println("此次匹配是成功的");
 					HashSet<ResultData> resultSet = rdfdao.searchByLabel(label);
-					
-					XmlWriter writer = new XmlWriter(resultSet);
+					XmlWriter writer = new XmlWriter(matcher.addLocation(resultSet));
+	
 					//	debug:			
 					writer.printToConsole();
 					

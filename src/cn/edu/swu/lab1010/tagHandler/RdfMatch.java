@@ -83,15 +83,21 @@ public class RdfMatch {
 		return end;
 	}
 
-	public final HashSet<ResultData> addLocation(HashSet<ResultData> resultSet) {
+	/**
+	 * 为直接匹配的字符串添加匹配的位置。
+	 * @param resultSet
+	 * @return
+	 * @throws Exception 
+	 */
+	public final HashSet<ResultData> addLocation(HashSet<ResultData> resultSet) throws Exception {
 		for (ResultData resultData : resultSet) {
+			if (label.equals(resultData.getRelativeMappedString())&&resultData.getRelation()==0) {
+				resultData.setStart(start);
+				resultData.setEnd(end);
+				resultData.setStraightMappedString(getStringOfMatch());
+			}//end if 
+		}//end for
 			
-				
-			
-			
-			
-		}
-			
-		return null;
+		return resultSet;
 	}
 	}
