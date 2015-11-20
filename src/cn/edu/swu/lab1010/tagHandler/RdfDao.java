@@ -94,10 +94,13 @@ public class RdfDao {
 	 * @return List<ResultData>
 	 */
 	public final HashSet<ResultData> searchByLabel(String label) {
-
+		//将resultData类的静态变量MappedString设置成label
+		//在下面找到的所有数据的直接匹配都是这个label
+		ResultData.setStaticMappedString(label);
 		HashSet<ResultData> resultSet = new HashSet<ResultData>();
 		StmtIterator selfStmtIter = model.listStatements(new SimpleSelector(null, null, label));
-
+		
+		
 		while (selfStmtIter.hasNext()) {
 			//得到直接匹配的资源
 			Statement selfStmt = selfStmtIter.nextStatement();
@@ -149,6 +152,7 @@ public class RdfDao {
 		return resultSet;
 	}
 
+
 	/**
 	 * 得到某一个资源的前驱,返回该资源作为宾语的陈述迭代器
 	 * 
@@ -180,14 +184,23 @@ public class RdfDao {
 	public Model getModel() {
 		return model;
 	}
-
-	public ResultData extractDataFromResToResultData(Resource res,int relation) {
+	private ResultData extractDataFromResToResultData(Resource res, int relation) {
+		// TODO Auto-generated method stub
+		//selfLabel 存放的是res这个资源的label
 		String selfLabel = res.getProperty(RDFS.label).getObject().toString();
 		String uriStr = res.getURI();
 		ResultData resData = new ResultData(relation, uriStr, selfLabel);
-		
 		return resData;
+		
 	}
+//
+//	public ResultData extractDataFromResToResultData(Resource res,int relation) {
+//		String selfLabel = res.getProperty(RDFS.label).getObject().toString();
+//		String uriStr = res.getURI();
+//		ResultData resData = new ResultData(relation, uriStr, selfLabel);
+//		
+//		return resData;
+//	}
 	
 //	public ResultData extractDataFromResToResultData(Resource res,int relation,int row,int position) {
 //		String selfLabel = res.getProperty(RDFS.label).getObject().toString();

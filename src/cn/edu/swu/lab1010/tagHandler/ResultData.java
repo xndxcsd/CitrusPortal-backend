@@ -1,5 +1,7 @@
 package cn.edu.swu.lab1010.tagHandler;
 
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+
 /**
  * <p>
  * 这个类的对象储存着检索到信息<br>
@@ -52,7 +54,9 @@ public class ResultData {
 	
 	public final String URI;
 	public final String label;
-	
+	//mappedString 用来表示这一条数据是跟哪个直接匹配的标签有关系。
+	private static String staticmappedString;
+	private String mappedString;
 	//relation用来表示与直接的匹配间的关系 规定有n层关系relation的值就为n	
 	public final int relation;
 	
@@ -62,6 +66,19 @@ public class ResultData {
 	//如果这条数据是直接的匹配，还需要将匹配到的内容和匹配的位置保存在对象中
 	private int row;
 	private int position;
+	
+	public String getMappedString() {
+		return mappedString;
+	}
+
+	public static void setStaticMappedString(String mappedString) {
+		ResultData.staticmappedString = mappedString;
+	}
+	public void setMappedString() {
+		if (null != staticmappedString)
+			this.mappedString = ResultData.staticmappedString;
+	}
+	
 	//	在构造方法中为final域赋值，并且在该类中将不会给出setter防止值被篡改
 	public ResultData() {
 		// TODO Auto-generated constructor stub
@@ -75,6 +92,7 @@ public class ResultData {
 		this.relation = relation;
 		this.URI = URI;
 		this.label = label;
+		this.setMappedString();
 	}
 //URI,Label,relation没有setter方法。
 	public String getURI() {
