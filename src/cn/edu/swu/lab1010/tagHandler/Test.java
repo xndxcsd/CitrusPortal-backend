@@ -9,22 +9,24 @@ import org.apache.jena.rdf.model.Model;
 public class Test {
 	
 	
-	private static String TAGFILEPATH = "C:\\Users\\csd\\Desktop\\CitrusTest1.1_modified杜.rdf";
-	private static String FILEPATH = "C:\\Users\\csd\\Desktop\\testfile.txt";
+	private static String TAGFILEPATH = "C:\\Users\\Administrator\\Desktop\\实验室数据与文件\\CitrusTest1.3_modified.rdf";
+	private static String FILEPATH = "C:\\Users\\Administrator\\Desktop\\实验室数据与文件\\desTest.rdf";
 	public static void main(String[] args) throws Exception {
-		long start = System.currentTimeMillis();
-		RdfDao rdfdao = new RdfDao(TAGFILEPATH);
-		FileDao filedao = new FileDao(FILEPATH);
+		long start = System.currentTimeMillis();//figure time
+		
+		RdfDao rdfdao = new RdfDao(TAGFILEPATH);//RDF source;
+		FileDao filedao = new FileDao(FILEPATH);//Match source;
 		
 		HashSet<String> labelSet = rdfdao.listObjectWithlabel();
 
 		try {
 			StringBuilder stringBuilder = filedao.read();
 			for (String label : labelSet) {
-				RdfMatch matcher = new RdfMatch(label, stringBuilder);
+				FileMatch matcher = new FileMatch(label, stringBuilder);
 				if (matcher.match()) {
 					//	debug:
 					System.out.println("此次匹配是成功的");
+					//
 					HashSet<ResultData> resultSet = rdfdao.searchByLabel(label);
 					XmlWriter writer = new XmlWriter(matcher.addLocation(resultSet));
 	

@@ -38,6 +38,19 @@ public class RdfDao {
 		}
 		model.read(in, null);
 	}
+	
+	public RdfDao(String filePath,FileMatch matcher) {
+		// TODO Auto-generated constructor stub
+		
+		this.model = ModelFactory.createDefaultModel();
+		
+		InputStream in = FileManager.get().open(filePath);
+		if (null == in) {
+			throw new IllegalArgumentException("File :" + filePath + "not found");
+		}
+		model.read(in, null);
+	}
+	
 
 	/**
 	 * 返回迭代标签值的迭代器

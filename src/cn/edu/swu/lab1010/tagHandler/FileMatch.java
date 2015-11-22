@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @author csd
  *
  */
-public class RdfMatch {
+public class FileMatch {
 
 	/**
 	 * 传入需匹配的标签和需匹配的文本，返回匹配成功与否
@@ -25,7 +25,7 @@ public class RdfMatch {
 	private int end;
 	private String stringOfMatch;
 
-	public RdfMatch(String label, StringBuilder stringBuilder) {
+	public FileMatch(String label, StringBuilder stringBuilder) {
 		this.label = label;
 		this.stringBuilder = stringBuilder;
 		// TODO Auto-generated constructor stub
