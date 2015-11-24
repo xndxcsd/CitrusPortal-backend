@@ -15,8 +15,8 @@ import org.apache.jena.sparql.function.library.e;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
 
+import cn.edu.swu.lab1010.mainTes.Data;
 import cn.edu.swu.lab1010.matchHandler.MatchInFile;
-import cn.edu.swu.lab1010.tagHandler.ResultData;
 
 /**
  * @author csd
@@ -111,11 +111,12 @@ public class RdfParser {
 	 * @return List<ResultData>
 	 * @throws Exception 
 	 */
-	public final HashSet<ResultData> searchByLabel(String label) {
+	public final HashSet<Data> searchByLabel(String label) {
 		//将resultData类的静态变量MappedString设置成label
 		//在下面找到的所有数据的直接匹配都是这个label
-		ResultData.setStaticMappedString(label);
-		HashSet<ResultData> resultSet = new HashSet<ResultData>();
+		
+		Data.setStaticMappedString(label);
+		HashSet<Data> resultSet = new HashSet<Data>();
 		StmtIterator selfStmtIter = model.listStatements(new SimpleSelector(null, null, label));
 		
 		
@@ -128,7 +129,7 @@ public class RdfParser {
 //			String selfLabel = self.getProperty(RDFS.label).getObject().toString();
 //			String uriStr = self.getURI();
 //			ResultData selfData = new ResultData(0, uriStr, selfLabel);
-			ResultData selfData = this.extractDataFromResToResultData(self, 0);
+			Data selfData = this.extractDataFromResToResultData(self, 0);
 			resultSet.add(selfData);
 			
 			//得到前驱并遍历
@@ -139,7 +140,7 @@ public class RdfParser {
 				Resource preRes = preStmt.getSubject();
 				
 				//将前驱的信息存放在ResultData对象中，并放进resultSet中
-				ResultData preData = this.extractDataFromResToResultData(preRes, 1);
+				Data preData = this.extractDataFromResToResultData(preRes, 1);
 				resultSet.add(preData);
 				
 				//得到前驱的前驱并遍历
@@ -149,7 +150,7 @@ public class RdfParser {
 					Statement prePreStmt = prePreStmtIter.nextStatement();
 					Resource prePreRes = prePreStmt.getSubject();
 					//将前前驱的信息存放在ResultData对象中，并放进resultSet中
-					ResultData prePreData = this.extractDataFromResToResultData(prePreRes, 2);
+					Data prePreData = this.extractDataFromResToResultData(prePreRes, 2);
 					resultSet.add(prePreData);
 					
 					
@@ -162,7 +163,7 @@ public class RdfParser {
 				RDFNode subNode =subStmt.getObject();
 				//将后驱的信息存放在ResultData对象中，并放进resultSet中
 				if (subNode instanceof Resource) {
-					ResultData subData = this.extractDataFromResToResultData((Resource)subNode, 1);
+					Data subData = this.extractDataFromResToResultData((Resource)subNode, 1);
 					resultSet.add(subData);
 				}
 			}
@@ -202,7 +203,7 @@ public class RdfParser {
 	public Model getModel() {
 		return model;
 	}
-	private ResultData extractDataFromResToResultData(Resource res, int relation) {
+	private Data extractDataFromResToResultData(Resource res, int relation) {
 		// TODO Auto-generated method stub
 		//selfLabel 存放的是res这个资源的label
 		String selfLabel;
@@ -211,7 +212,7 @@ public class RdfParser {
 		else 
 			selfLabel = "null";
 		String uriStr = res.getURI();
-		ResultData resData = new ResultData(relation, uriStr, selfLabel);
+		Data resData = new Data(relation, uriStr, selfLabel);
 		return resData;
 		
 	}

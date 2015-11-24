@@ -1,4 +1,4 @@
-package cn.edu.swu.lab1010.tagHandler;
+package cn.edu.swu.lab1010.mainTes;
 
 /**
  * <p>
@@ -13,7 +13,7 @@ package cn.edu.swu.lab1010.tagHandler;
  * @author csd
  *
  */
-public class ResultData {
+public class Data {
 	/*
 	 * 本来是考虑一个ResultData对象中存放一条链式的数据，但考虑到数据的 抽离和写入过程过于复杂，所以放弃了这种方案
 	 *
@@ -99,22 +99,22 @@ public class ResultData {
 	}
 
 	public static void setStaticMappedString(String mappedString) {
-		ResultData.staticRelativeMappedString = mappedString;
+		Data.staticRelativeMappedString = mappedString;
 	}
 	public void setRelativeMappedString() {
 		if (null != staticRelativeMappedString)
-			this.relativeMappedString = ResultData.staticRelativeMappedString;
+			this.relativeMappedString = Data.staticRelativeMappedString;
 	}
 	
 	//	在构造方法中为final域赋值，并且在该类中将不会给出setter防止值被篡改
-	public ResultData() {
+	public Data() {
 		// TODO Auto-generated constructor stub
 		this.URI = " ";
 		this.label =" ";
 		this.relation = -10;
 	}
 	
-	public ResultData(int relation,String URI,String label) {
+	public Data(int relation,String URI,String label) {
 		// TODO Auto-generated constructor stub
 		this.relation = relation;
 		this.URI = URI;
@@ -202,7 +202,7 @@ public class ResultData {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ResultData other = (ResultData) obj;
+		Data other = (Data) obj;
 		if (URI == null) {
 			if (other.URI != null)
 				return false;

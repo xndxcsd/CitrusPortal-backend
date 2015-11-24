@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.edu.swu.lab1010.tagHandler.ResultData;
+import cn.edu.swu.lab1010.mainTes.Data;
 
 /**
  * 实现匹配
@@ -85,21 +85,22 @@ public class MatchInFile {
 		return end;
 	}
 
-	/**
-	 * 为直接匹配的字符串添加匹配的位置。
-	 * @param resultSet
-	 * @return
-	 * @throws Exception 
-	 */
-	public final HashSet<ResultData> addLocation(HashSet<ResultData> resultSet) throws Exception {
-		for (ResultData resultData : resultSet) {
-			if (label.equals(resultData.getRelativeMappedString())&&resultData.getRelation()==0) {
-				resultData.setStart(start);
-				resultData.setEnd(end);
-				resultData.setStraightMappedString(getStringOfMatch());
-			}//end if 
-		}//end for
-			
-		return resultSet;
-	}
+//	/**
+//	 * 为直接匹配的字符串添加匹配的位置。
+//	 * @param resultSet
+//	 * @return
+//	 * @throws Exception 
+//	 */
+//	public final HashSet<Data> addLocation(HashSet<Data> resultSet) throws Exception {
+//		for (Data resultData : resultSet) {
+//			if (label.equals(resultData.getRelativeMappedString())&&resultData.getRelation()==0) {
+//				resultData.setStart(start);
+//				resultData.setEnd(end);
+//				resultData.setStraightMappedString(getStringOfMatch());
+//			}//end if 
+//		}//end for
+//			
+//		return resultSet;
+//	}
+//	
 	}

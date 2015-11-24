@@ -1,4 +1,4 @@
-package cn.edu.swu.lab1010.tagHandler;
+package cn.edu.swu.lab1010.mainTes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class Test {
 	private static String TAGFILEPATH = "C:\\Users\\Administrator\\Desktop\\实验室数据与文件\\CitrusTest1.3_modified.rdf";
 	private static String FILEPATH = "C:\\Users\\Administrator\\Desktop\\实验室数据与文件\\desTest.rdf";
 	public static void main(String[] args) throws Exception {
-		long start = System.currentTimeMillis();//figure time
+		long startime = System.currentTimeMillis();//figure time
 		
 		RdfParser rdfdao = new RdfParser(TAGFILEPATH);//RDF source;
 		FileReader filedao = new FileReader(FILEPATH);//Match source;
@@ -31,12 +31,14 @@ public class Test {
 				if (matcher.match()) {
 					//	debug:
 					System.out.println("此次匹配是成功的");
-					//
-					HashSet<ResultData> resultSet = rdfdao.searchByLabel(label);
-					XmlWriter writer = new XmlWriter(matcher.addLocation(resultSet));
-	
+					//每一个 label匹配的数据都放在一个HashSet中
+					HashSet<Data> resultSet = rdfdao.searchByLabel(label);
+					int startOfMatch = matcher.getStartOfMatch();
+					int endOfMatch = matcher.getEndOfMatch();
+					String stringOfMatch = matcher.getStringOfMatch();
+					
+					
 					//	debug:			
-					writer.printToConsole();
 					
 				}
 			}
@@ -46,7 +48,7 @@ public class Test {
 			System.out.println("错误的文章地址");
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("搜索一次标签所花费时间为 : "+(end-start));
+		System.out.println("搜索一次标签所花费时间为 : "+(end-startime));
 		
 	}
 }

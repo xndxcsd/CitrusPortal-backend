@@ -3,8 +3,7 @@ import java.util.HashSet;
 
 import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 
-import cn.edu.swu.lab1010.tagHandler.ResultData;
-import javafx.scene.chart.PieChart.Data;
+import cn.edu.swu.lab1010.mainTes.Data;
 
 /**
  * <p>无参的构造方法在此类中并没有用。
@@ -20,13 +19,13 @@ import javafx.scene.chart.PieChart.Data;
  */
 
 public class XmlWriter {
-	private HashSet<ResultData> dataSet;
+	private HashSet<Data> dataSet;
 	public XmlWriter() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 	
-	public XmlWriter(HashSet<ResultData> dataSet) {
+	public XmlWriter(HashSet<Data> dataSet) {
 		this.dataSet = dataSet;
 	}
 	/**
@@ -45,7 +44,7 @@ public class XmlWriter {
 	}
 	
 	public final void printToConsole() {
-		for (ResultData resultData : dataSet) {//测试该列表中是否有数据
+		for (Data resultData : dataSet) {//测试该列表中是否有数据
 			
 			System.out.println(resultData.getRelativeMappedString());
 			System.out.println(resultData.getLabel());
