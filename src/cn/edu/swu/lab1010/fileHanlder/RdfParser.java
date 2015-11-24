@@ -1,4 +1,4 @@
-package cn.edu.swu.lab1010.tagHandler;
+package cn.edu.swu.lab1010.fileHanlder;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -15,10 +15,13 @@ import org.apache.jena.sparql.function.library.e;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.vocabulary.RDFS;
 
+import cn.edu.swu.lab1010.matchHandler.MatchInFile;
+import cn.edu.swu.lab1010.tagHandler.ResultData;
+
 /**
  * @author csd
  */
-public class RdfDao {
+public class RdfParser {
 
 	Model model;
 
@@ -27,7 +30,7 @@ public class RdfDao {
 	 * 
 	 * @param filePath
 	 */
-	public RdfDao(String filePath) {
+	public RdfParser(String filePath) {
 		// TODO Auto-generated constructor stub
 
 		this.model = ModelFactory.createDefaultModel();
@@ -39,7 +42,7 @@ public class RdfDao {
 		model.read(in, null);
 	}
 	
-	public RdfDao(String filePath,FileMatch matcher) {
+	public RdfParser(String filePath,MatchInFile matcher) {
 		// TODO Auto-generated constructor stub
 		
 		this.model = ModelFactory.createDefaultModel();

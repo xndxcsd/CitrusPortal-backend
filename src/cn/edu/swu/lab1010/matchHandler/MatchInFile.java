@@ -1,8 +1,10 @@
-package cn.edu.swu.lab1010.tagHandler;
+package cn.edu.swu.lab1010.matchHandler;
 
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.edu.swu.lab1010.tagHandler.ResultData;
 
 /**
  * 实现匹配
@@ -10,7 +12,7 @@ import java.util.regex.Pattern;
  * @author csd
  *
  */
-public class FileMatch {
+public class MatchInFile {
 
 	/**
 	 * 传入需匹配的标签和需匹配的文本，返回匹配成功与否
@@ -25,7 +27,7 @@ public class FileMatch {
 	private int end;
 	private String stringOfMatch;
 
-	public FileMatch(String label, StringBuilder stringBuilder) {
+	public MatchInFile(String label, StringBuilder stringBuilder) {
 		this.label = label;
 		this.stringBuilder = stringBuilder;
 		// TODO Auto-generated constructor stub

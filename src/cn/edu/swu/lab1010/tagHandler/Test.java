@@ -6,6 +6,11 @@ import java.util.HashSet;
 
 import org.apache.jena.rdf.model.Model;
 
+import cn.edu.swu.lab1010.fileHanlder.FileReader;
+import cn.edu.swu.lab1010.fileHanlder.RdfParser;
+import cn.edu.swu.lab1010.matchHandler.MatchInFile;
+import cn.edu.swu.lab1010.xmlWriter.XmlWriter;
+
 public class Test {
 	
 	
@@ -14,15 +19,15 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		long start = System.currentTimeMillis();//figure time
 		
-		RdfDao rdfdao = new RdfDao(TAGFILEPATH);//RDF source;
-		FileDao filedao = new FileDao(FILEPATH);//Match source;
+		RdfParser rdfdao = new RdfParser(TAGFILEPATH);//RDF source;
+		FileReader filedao = new FileReader(FILEPATH);//Match source;
 		
 		HashSet<String> labelSet = rdfdao.listObjectWithlabel();
 
 		try {
 			StringBuilder stringBuilder = filedao.read();
 			for (String label : labelSet) {
-				FileMatch matcher = new FileMatch(label, stringBuilder);
+				MatchInFile matcher = new MatchInFile(label, stringBuilder);
 				if (matcher.match()) {
 					//	debug:
 					System.out.println("此次匹配是成功的");

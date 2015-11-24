@@ -1,4 +1,4 @@
-package cn.edu.swu.lab1010.tagHandler;
+package cn.edu.swu.lab1010.fileHanlder;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -10,11 +10,11 @@ import java.io.InputStreamReader;
  * @author csd
  *
  */
-public class FileDao {
+public class FileReader {
 
 	private String filePath;
 
-	public FileDao(String filePath) {
+	public FileReader(String filePath) {
 		this.filePath = filePath;
 	}
 
