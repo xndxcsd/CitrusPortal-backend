@@ -6,20 +6,26 @@ import java.util.HashSet;
 
 import org.apache.jena.rdf.model.Model;
 
+import cn.edu.swu.lab1010.dataHolder.FatherData;
+import cn.edu.swu.lab1010.dataHolder.GrandPaData;
+import cn.edu.swu.lab1010.dataHolder.SelfData;
+import cn.edu.swu.lab1010.dataHolder.SonData;
 import cn.edu.swu.lab1010.fileHanlder.FileReader;
 import cn.edu.swu.lab1010.fileHanlder.RdfParser;
 import cn.edu.swu.lab1010.matchHandler.MatchInFile;
+import cn.edu.swu.lab1010.matchHandler.MatchInRdf;
 import cn.edu.swu.lab1010.xmlWriter.XmlWriter;
 
 public class Test {
 	
 	
-	private static String TAGFILEPATH = "C:\\Users\\Administrator\\Desktop\\实验室数据与文件\\CitrusTest1.3_modified.rdf";
-	private static String FILEPATH = "C:\\Users\\Administrator\\Desktop\\实验室数据与文件\\desTest.rdf";
+	private static String TAGFILEPATH = "C:\\Users\\csd\\Desktop\\CitrusTest1.1_modified杜.rdf";
+	private static String FILEPATH = "C:\\Users\\csd\\Desktop\\lab1010\\柑桔实用栽培技术.doc";
 	public static void main(String[] args) throws Exception {
 		long startime = System.currentTimeMillis();//figure time
 		
 		RdfParser rdfdao = new RdfParser(TAGFILEPATH);//RDF source;
+		Model model = rdfdao.getModel();//得到模型
 		FileReader filedao = new FileReader(FILEPATH);//Match source;
 		
 		HashSet<String> labelSet = rdfdao.listObjectWithlabel();
@@ -32,15 +38,25 @@ public class Test {
 					//	debug:
 					System.out.println("此次匹配是成功的");
 					//每一个 label匹配的数据都放在一个HashSet中
-					HashSet<Data> resultSet = rdfdao.searchByLabel(label);
 					int startOfMatch = matcher.getStartOfMatch();
 					int endOfMatch = matcher.getEndOfMatch();
 					String stringOfMatch = matcher.getStringOfMatch();
+					//新建匹配
+					MatchInRdf matchInRdf = new MatchInRdf(label, startOfMatch, endOfMatch, stringOfMatch, model);					
+					//执行匹配
+					matchInRdf.searchByLabel();
+					ArrayList<SonData> sonSet = matchInRdf.getSonList();
+					ArrayList<SelfData> selfSet = matchInRdf.getSelfList();
+					ArrayList<FatherData> fatherSet = matchInRdf.getFatherList();
+					ArrayList<GrandPaData> grandPaSet = matchInRdf.getGrandPaList();
 					
-					
-					//	debug:			
-					
+					XmlWriter xmlWriter = new XmlWriter(sonSet, selfSet, fatherSet, grandPaSet);
+					xmlWriter.printToConsole();
+					//	debug: 只循环一次	
+//					break;
 				}
+//				else System.out.println("此次匹配是不成功的");
+				//else watch一下匹配不成功的情况
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

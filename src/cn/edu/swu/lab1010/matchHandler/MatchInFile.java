@@ -1,10 +1,7 @@
 package cn.edu.swu.lab1010.matchHandler;
 
-import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import cn.edu.swu.lab1010.mainTes.Data;
 
 /**
  * 实现匹配

@@ -1,9 +1,10 @@
 package cn.edu.swu.lab1010.xmlWriter;
-import java.util.HashSet;
+import java.util.ArrayList;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders;
-
-import cn.edu.swu.lab1010.mainTes.Data;
+import cn.edu.swu.lab1010.dataHolder.FatherData;
+import cn.edu.swu.lab1010.dataHolder.GrandPaData;
+import cn.edu.swu.lab1010.dataHolder.SelfData;
+import cn.edu.swu.lab1010.dataHolder.SonData;
 
 /**
  * <p>无参的构造方法在此类中并没有用。
@@ -19,16 +20,26 @@ import cn.edu.swu.lab1010.mainTes.Data;
  */
 
 public class XmlWriter {
-	private HashSet<Data> dataSet;
+	private ArrayList<SonData> sonList;
+	private ArrayList<SelfData> selfList;
+	private ArrayList<FatherData> fatherList;
+	private ArrayList<GrandPaData> grandPaList;
+	
 	public XmlWriter() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 	
-	public XmlWriter(HashSet<Data> dataSet) {
-		this.dataSet = dataSet;
+	public XmlWriter(ArrayList<SonData> sonList,ArrayList<SelfData> selfList,ArrayList<FatherData> fatherList,ArrayList<GrandPaData> grandPaList)
+	{
+		this.sonList = sonList;
+		this.selfList = selfList;
+		this.fatherList = fatherList;
+		this.grandPaList = grandPaList;
 	}
+	
 	/**
+	 * 
 	 * <p>wirte to file by dom4j ,a XML tool for java .
 	 * <p>
 	 * @throws Exception 
@@ -44,18 +55,25 @@ public class XmlWriter {
 	}
 	
 	public final void printToConsole() {
-		for (Data resultData : dataSet) {//测试该列表中是否有数据
+		for (SelfData SelfData : selfList) {//测试该列表中是否有数据
 			
-			System.out.println(resultData.getRelativeMappedString());
-			System.out.println(resultData.getLabel());
-			System.out.println(resultData.getURI());
-			System.out.println(resultData.getRelation());
-			System.out.println(resultData.getRow());
-			System.out.println(resultData.getPosition());
-			System.out.println("start :"+resultData.getStart());
-			System.out.println("end :"+resultData.getEnd());
-			System.out.println("straight :"+resultData.getStraightMappedString());
+			System.out.println("relativelabel : "+SelfData.getRelativeMappedString());
+			System.out.println("label : "+SelfData.getLabel());
+			System.out.println("URI : "+SelfData.getURI());
+			System.out.println("relation : "+SelfData.getRelation());
+			System.out.println("start :"+SelfData.getStart());
+			System.out.println("end :"+SelfData.getEnd());
+			System.out.println("straight :"+SelfData.getStraightMappedString());
 			System.out.println();
+		}
+		for (FatherData fatherData : fatherList) {
+			System.out.println("relativelabel : "+fatherData.getRelativeMappedString());
+			System.out.println("label : "+fatherData.getLabel());
+			System.out.println("URI : "+fatherData.getURI());
+			System.out.println("relation : "+fatherData.getRelation());
+			System.out.println();
+			
+		
 		}
 		
 	}
