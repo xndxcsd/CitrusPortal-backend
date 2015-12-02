@@ -28,6 +28,7 @@ public abstract class Data {
 			setRelativeMappedString();
 		}
 		public String getURI() {
+			if (URI==null) return "null";
 			return URI;
 		}
 		public String getLabel() {

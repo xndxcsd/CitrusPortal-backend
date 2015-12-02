@@ -51,7 +51,9 @@ public class Test {
 					ArrayList<GrandPaData> grandPaSet = matchInRdf.getGrandPaList();
 					
 					XmlWriter xmlWriter = new XmlWriter(sonSet, selfSet, fatherSet, grandPaSet);
-					xmlWriter.printToConsole();
+//					xmlWriter.printToConsole();
+//					xmlWriter.writeSelfList();
+					xmlWriter.writeFatherList();
 					//	debug: 只循环一次	
 //					break;
 				}
