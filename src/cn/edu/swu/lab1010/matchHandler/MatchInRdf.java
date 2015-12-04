@@ -1,6 +1,7 @@
 package cn.edu.swu.lab1010.matchHandler;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
@@ -31,12 +32,12 @@ public class MatchInRdf {
 	private Model model;
 	
 	/*
-	 *	返回的HashSet 
+	 *	下面的查找函数中为他们赋初值
 	 */
-	private ArrayList<SonData> sonList;
-	private ArrayList<SelfData> selfList;
-	private ArrayList<FatherData> fatherList;
-	private ArrayList<GrandPaData> grandPaList;
+	private ArrayList<SonData> sonList = null;
+	private ArrayList<SelfData> selfList = null;
+	private ArrayList<FatherData> fatherList = null;
+	private ArrayList<GrandPaData> grandPaList = null;
 
 	
 
@@ -86,9 +87,13 @@ public class MatchInRdf {
 	
 	private final void searchSelfByLabel(String label) {
 		Data.setStaticMappedString(label);
-		ArrayList<SelfData> resultSet = new ArrayList<SelfData>();
+		ArrayList<SelfData> resultList = new ArrayList<SelfData>();
 		StmtIterator selfStmtIter = model.listStatements(new SimpleSelector(null, null, label));
+		
+			int count =0;
 		while (selfStmtIter.hasNext()) {
+			System.out.println(" in self :"+count++);
+			
 			//得到直接匹配的资源
 			Statement selfStmt = selfStmtIter.nextStatement();
 			Resource self = selfStmt.getSubject();
@@ -96,50 +101,51 @@ public class MatchInRdf {
 			//将直接匹配的信息存放在SelfData对象中，并放进resultSet中
 			String uriStr = self.getURI();
 			SelfData aSelfData = new SelfData(uriStr, label, MappedString, start, end);
-			resultSet.add(aSelfData);
+			resultList.add(aSelfData);
 			
-//			//得到前驱并遍历
+//			//得到前驱并搜索
 			StmtIterator preStmtIter = this.getPre(self);
 			this.searchFatherData(preStmtIter);
 			
-			//得到后继并遍历
+			//得到后继并搜索
 			StmtIterator sonStmtIter = this.getSub(self);
 			this.searchSonData(sonStmtIter);
 		}
 		
-		this.selfList = resultSet;
+		this.selfList = resultList;
 		
 	}
 	
 	private final void searchFatherData(StmtIterator preStmtIter) {
-		if (preStmtIter.equals(null)) return;
-		ArrayList<FatherData> resultSet = new ArrayList<>();
-		while (preStmtIter.hasNext()) {
-			//得到前驱资源
-			Statement preStmt = preStmtIter.nextStatement();
-			Resource preRes = preStmt.getSubject();
-			if (preRes == null) break;
-			//得到属性值为rdfs:label的陈述，加入判断避免空指针异常
-			Statement labelStmt = preRes.getProperty(RDFS.label);
-			String selfLabel;
-			if (labelStmt==null) {
-				selfLabel ="label : null"; 
-					
+		
+			ArrayList<FatherData> resultList = new ArrayList<>();
+			while (preStmtIter.hasNext()) {
+				//得到前驱资源
+				Statement preStmt = preStmtIter.nextStatement();
+				Resource preRes = preStmt.getSubject();
+				
+				//得到属性值为rdfs:label的陈述，加入判断避免空指针异常
+				Statement labelStmt = preRes.getProperty(RDFS.label);
+				if (labelStmt!=null) {
+					if (preRes instanceof Resource) {				
+						String fatherLabel = labelStmt.getObject().toString(); 			
+						String uriStr = preRes.getURI();
+						//新建一个FatherOrSonData类的对象来存储这条数据
+						FatherData aFatherOrSonData = new FatherData(uriStr, fatherLabel);
+						//将前驱的信息存放在FatherData对象中，并放进resultSet中
+						resultList.add(aFatherOrSonData);
+					}					
+				}
+				//得到前驱的前驱并遍历
+				StmtIterator prePreStmtIter = this.getPre(preRes);
+				this.searchGrandPaData(prePreStmtIter);
 			}
-			else {
-				selfLabel = labelStmt.getObject().toString(); 
+			if (Objects.equals(this.fatherList, null)) {
+				this.fatherList = resultList;
+			}else {
+				this.fatherList.addAll(resultList);				
 			}
-			
-			String uriStr = preRes.getURI();
-			//新建一个FatherOrSonData类的对象来存储这条数据
-			FatherData aFatherOrSonData = new FatherData(uriStr, selfLabel);
-			//将前驱的信息存放在FatherData对象中，并放进resultSet中
-			resultSet.add(aFatherOrSonData);
-			//得到前驱的前驱并遍历
-			StmtIterator prePreStmtIter = this.getPre(preRes);
-			this.searchGrandPaData(prePreStmtIter);
-		}
-		this.fatherList = resultSet;
+		
 	}
 	
 	private final void searchGrandPaData(StmtIterator prePreStmtIter) {
@@ -148,27 +154,32 @@ public class MatchInRdf {
 			//得到前驱资源
 			Statement prePreStmt = prePreStmtIter.nextStatement();
 			Resource prePreRes = prePreStmt.getSubject();
-			//得到属性值为rdfs:label的陈述，加入判断避免空指针异常
-			Statement labelStmt = prePreRes.getProperty(RDFS.label);
-			String selfLabel;
-			if (labelStmt!=null) {
-				selfLabel = labelStmt.getObject().toString(); 
-			}else {
-				selfLabel = new String("null");
+			if (prePreRes instanceof Resource) {
+				//得到属性值为rdfs:label的陈述，加入判断避免空指针异常
+				Statement labelStmt = prePreRes.getProperty(RDFS.label);
+				String grandPaLabel;
+				if (labelStmt!=null) {
+					grandPaLabel = labelStmt.getObject().toString(); 
+				}else {
+					grandPaLabel = new String("null");
+				}
+				String uriStr = prePreRes.getURI();
+				//新建一个FatherOrSonData类的对象来存储这条数据
+				GrandPaData aGrandPaData = new GrandPaData(uriStr, grandPaLabel);
+				//将前驱的前驱的信息存放在GrandData对象中，并放进resultSet中
+				resultSet.add(aGrandPaData);					
 			}
-			String uriStr = prePreRes.getURI();
-			//新建一个FatherOrSonData类的对象来存储这条数据
-			GrandPaData aGrandPaData = new GrandPaData(uriStr, selfLabel);
-			//将前驱的前驱的信息存放在GrandData对象中，并放进resultSet中
-			resultSet.add(aGrandPaData);
-			//得到前驱的前驱并遍历
 		}
-		this.grandPaList = resultSet;
+		if (Objects.equals(grandPaList, null)) {
+			this.grandPaList = resultSet;			
+		}else {
+			this.grandPaList.addAll(resultSet);
+		}
 	}
 	
 	private final void searchSonData(StmtIterator sonStmtIter) {
 		
-		ArrayList<SonData> resultSet = new ArrayList<>();
+		ArrayList<SonData> resultList = new ArrayList<>();
 		while (sonStmtIter.hasNext()) {
 			Statement sonStmt = sonStmtIter.nextStatement();
 			RDFNode sonNode =sonStmt.getObject();
@@ -183,23 +194,22 @@ public class MatchInRdf {
 				}
 				String uriStr = ((Resource) sonNode).getURI();
 				SonData aSonData = new SonData(uriStr, selfLabel);
-				
+				resultList.add(aSonData);
 			}
 			
 		}
-		this.sonList = resultSet;				
+		if(Objects.equals(sonList, null)) {
+			this.sonList = resultList;			
+		}else {
+			this.sonList.addAll(resultList);
+		}
 	}
 	
 	
-	/**
-	 * 传入匹配成功的label，返回由其对应的资源和其前驱，前驱的前驱，后继组成的jena Model
-	 * 
-	 * @param String
-	 * @return List<ResultData>
-	 * @throws Exception 
+	/*
+	 *	调用有参的方法
 	 */
 	public final void searchByLabel() {
-		//调用searchSelfByLabel(label) 方法中有嵌套 ， 遍历前驱后继。
 		this.searchSelfByLabel(this.label);
 	}
 

@@ -3,6 +3,7 @@ package cn.edu.swu.lab1010.mainTes;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 
 import org.apache.jena.rdf.model.Model;
 
@@ -22,6 +23,13 @@ public class Test {
 	private static String TAGFILEPATH = "C:\\Users\\csd\\Desktop\\CitrusTest1.1_modified杜.rdf";
 	private static String FILEPATH = "C:\\Users\\csd\\Desktop\\lab1010\\柑桔实用栽培技术.doc";
 	public static void main(String[] args) throws Exception {
+		String as = null;
+		String sa=null;
+		
+		System.out.println("objects.equals : "+Objects.equals(as, sa));
+		System.out.println(" == :"+as==sa);
+		
+		
 		long startime = System.currentTimeMillis();//figure time
 		
 		RdfParser rdfdao = new RdfParser(TAGFILEPATH);//RDF source;

@@ -69,8 +69,11 @@ public class XmlWriter {
 	 * @throws IOException 
 	 */
 	public final void write() throws IOException{
-		if (!Objects.equals(sonList, null))
+		if (!Objects.equals(sonList, null)){
+//			System.out.println("in son");
 			this.writeSonList();
+			
+		}
 		
 		if (!Objects.equals(selfList, null))
 			this.writeSelfList();
@@ -93,7 +96,10 @@ public class XmlWriter {
 		
 		OutputFormat format = OutputFormat.createPrettyPrint();
 		format.setEncoding("UTF-8");
-		
+		format.setExpandEmptyElements(true);
+        format.setTrimText(false);
+        format.setIndent(" ");
+        
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
@@ -105,7 +111,6 @@ public class XmlWriter {
 		Document doc = DocumentHelper.createDocument();
 		
 		Element root = doc.addElement("add");
-//		int count=0;
 		
 		ListIterator<SelfData> selfIter = selfList.listIterator();
 		while (selfIter.hasNext()) {
@@ -143,12 +148,7 @@ public class XmlWriter {
 			relationElement.addAttribute("name", "relation");
 			relationElement.setText(new Integer(relation).toString());
 			
-//			System.out.println("添加第"+ count + "项到xml中");
-//			count++;
-//			
 		}
-		
-		
 	
 		writer = new XMLWriter(new FileWriter(file), format);
 		writer.write(doc);
@@ -179,7 +179,7 @@ public class XmlWriter {
 		Element root = doc.addElement("add");
 		
 		ListIterator<FatherData> fatherIter = fatherList.listIterator();
-//		int count=0;
+		
 		while (fatherIter.hasNext()) {
 			FatherData fatherData = fatherIter.next();
 	
@@ -207,9 +207,7 @@ public class XmlWriter {
 			relationElement.addAttribute("name", "relation");
 			relationElement.setText(new Integer(relation).toString());
 			
-//			System.out.println("添加第"+ count + "项到xml中");
-//			count++;
-			
+
 		}
 
 		writer = new XMLWriter(new FileWriter(file), format);
