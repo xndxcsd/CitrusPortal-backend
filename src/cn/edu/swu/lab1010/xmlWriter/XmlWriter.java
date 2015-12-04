@@ -1,16 +1,12 @@
 package cn.edu.swu.lab1010.xmlWriter;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Objects;
 
-import org.dom4j.Attribute;
 import org.dom4j.Document;
-import org.dom4j.DocumentFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
@@ -25,33 +21,38 @@ import cn.edu.swu.lab1010.dataHolder.SonData;
  * <p>无参的构造方法在此类中并没有用。
  * 我们并未在该类中添加setDataObject()方法
  *	增加发生未知错误的可能性。
- * <p>使用时必须传入一个ResultData对象。
+ * <p>使用时必须传入相应对象。
  * <p>该类要实现将该对象携带的数据写到xml。
  * <p>That must be:</br>
  * {@code
- * 	XmlWriter xmlWriter=new XmlWriter(ResultData dataObject);
+ * 	XmlWriter xmlWriter=new XmlWriter(ArrayList<SonData> sonList,ArrayList<SelfData> selfList,ArrayList<FatherData> fatherList,ArrayList<GrandPaData> grandPaList);
  * }
+ * 
+ *
+ *
  * @author csd
  */
 
 public class XmlWriter {
 	
 	
-	private String selfFilePath = "C:\\Users\\csd\\Desktop\\testdir\\selfxmltest.xml";
-	private String sonFilePath = "C:\\Users\\csd\\Desktop\\testdir\\sonxmltest.xml";
-	private String fatherFilePath = "C:\\Users\\csd\\Desktop\\testdir\\fatherxmltest.xml";
-	private String grandpaFilePath = "C:\\Users\\csd\\Desktop\\testdir\\grandpaxmltest.xml";
-
+	private String selfFilePath;
+	private String sonFilePath;
+	private String fatherFilePath;
+	private String grandpaFilePath;
+	private String dirPath = "C:\\Users\\csd\\Desktop\\testdir\\";
+	//输出文件ID 
+	static int ID = 0;
+	
 	private ArrayList<SonData> sonList;
 	private ArrayList<SelfData> selfList;
 	private ArrayList<FatherData> fatherList;
 	private ArrayList<GrandPaData> grandPaList;
 	
-	DocumentFactory docFactory = DocumentFactory.getInstance();
 	public XmlWriter() {
-		// TODO Auto-generated constructor stub
 		super();
 	}
+	
 	
 	public XmlWriter(ArrayList<SonData> sonList,ArrayList<SelfData> selfList,ArrayList<FatherData> fatherList,ArrayList<GrandPaData> grandPaList)
 	{
@@ -68,37 +69,28 @@ public class XmlWriter {
 	 * @throws IOException 
 	 */
 	public final void write() throws IOException{
-		XMLWriter writer = null;
-		File file = new File(selfFilePath);
-		OutputFormat format = OutputFormat.createPrettyPrint();
-		format.setEncoding("UTF-8");
+		if (!Objects.equals(sonList, null))
+			this.writeSonList();
 		
-		if(!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		Document doc = DocumentHelper.createDocument();
-		Element root = doc.addElement("add");
+		if (!Objects.equals(selfList, null))
+			this.writeSelfList();
 		
-		Element segment = root.addElement("doc");
-		Element URI = segment.addElement("field");
-		URI.addAttribute("name", "URI");
-		URI.setText("text");
+		if (!Objects.equals(fatherList, null))
+			this.writeFatherList();
 		
-		writer = new XMLWriter(new FileWriter(file), format);
-		writer.write(doc);
-		writer.close();
+		if (!Objects.equals(grandPaList, null))
+			this.writeGrandPaList();
 		
+		//文件名中的ID。每写完一次数据，就让该类域的值+1；
+		XmlWriter.ID++;
 	}
 	
 	
 	public final void writeSelfList() throws IOException {
+		selfFilePath = dirPath+"self"+ID+".xml";
 		XMLWriter writer = null;
 		File file = new File(selfFilePath);
+		
 		OutputFormat format = OutputFormat.createPrettyPrint();
 		format.setEncoding("UTF-8");
 		
@@ -106,14 +98,14 @@ public class XmlWriter {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
-		Document doc = docFactory.createDocument();
+		Document doc = DocumentHelper.createDocument();
+		
 		Element root = doc.addElement("add");
-		int count=0;
+//		int count=0;
 		
 		ListIterator<SelfData> selfIter = selfList.listIterator();
 		while (selfIter.hasNext()) {
@@ -165,25 +157,29 @@ public class XmlWriter {
 	}
 	
 	public final void writeFatherList() throws IOException {
+		fatherFilePath = dirPath + "father" + ID + ".xml";
 		XMLWriter writer = null;
 		File file = new File(fatherFilePath);
-		OutputFormat format = OutputFormat.createPrettyPrint();
-		format.setEncoding("UTF-8");
 		
+		OutputFormat format =OutputFormat.createPrettyPrint();
+		format.setEncoding("UTF-8");
+		format.setExpandEmptyElements(true);
+        format.setTrimText(false);
+        format.setIndent(" ");
+        
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		Document doc = docFactory.createDocument();
+		Document doc = DocumentHelper.createDocument();
 		Element root = doc.addElement("add");
 		
 		ListIterator<FatherData> fatherIter = fatherList.listIterator();
-		int count=0;
+//		int count=0;
 		while (fatherIter.hasNext()) {
 			FatherData fatherData = fatherIter.next();
 	
@@ -211,53 +207,134 @@ public class XmlWriter {
 			relationElement.addAttribute("name", "relation");
 			relationElement.setText(new Integer(relation).toString());
 			
-			System.out.println("添加第"+ count + "项到xml中");
-			count++;
+//			System.out.println("添加第"+ count + "项到xml中");
+//			count++;
 			
 		}
 
-//		writer = new XMLWriter(new FileWriter(file), format);
-//		writer = new XMLWriter(System.out);
-//		writer = new XMLWriter(new FileWriter(file));
-//		writer = new XMLWriter(new BufferedWriter(new FileWriter(file)));
-		writer = new XMLWriter(new FileOutputStream(file));
+		writer = new XMLWriter(new FileWriter(file), format);
+//		writer = new XMLWriter(System.out,format);
 		writer.write(doc);
 		writer.close();
+	
 		
 	}
 	
-	public final void writeSonList(ArrayList<SonData> sonData) {
+	public final void writeSonList() throws IOException {
+		sonFilePath = dirPath + "son" + ID + ".xml";
 		XMLWriter writer = null;
 		File file = new File(sonFilePath);
-		OutputFormat format = OutputFormat.createPrettyPrint();
-		format.setEncoding("UTF-8");
 		
+		OutputFormat format =OutputFormat.createPrettyPrint();
+		format.setEncoding("UTF-8");
+		format.setExpandEmptyElements(true);
+        format.setTrimText(false);
+        format.setIndent(" ");
+        
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-	}
-	public final void writeGrandPaList(ArrayList<GrandPaData> GrandPaData) {
+		Document doc = DocumentHelper.createDocument();
+		Element root = doc.addElement("add");
 		
+		ListIterator<SonData> sonIter = sonList.listIterator();
+		while (sonIter.hasNext()) {
+			SonData sonData = sonIter.next();
+	
+			String label = sonData.getLabel();
+			int relation = sonData.getRelation();
+			String uri = sonData.getURI();
+			String relativeMappedString = sonData.getRelativeMappedString();
+			
+			Element segment = root.addElement("doc");
+			
+			Element uriElement = segment.addElement("field")
+										.addAttribute("name", "URI");
+			uriElement.setText(uri);
+					
+			Element relativeMappedStringElement = segment.addElement("field");
+			relativeMappedStringElement.addAttribute("name", "relativeMappedString");
+			relativeMappedStringElement.setText(relativeMappedString);
+			
+			
+			Element labelElement = segment.addElement("field");
+			labelElement.addAttribute("name", "label");
+			labelElement.setText(label);
+			
+			Element relationElement = segment.addElement("field");
+			relationElement.addAttribute("name", "relation");
+			relationElement.setText(new Integer(relation).toString());
+			
+		}
+
+		writer = new XMLWriter(new FileWriter(file), format);
+//		writer = new XMLWriter(System.out,format);
+		writer.write(doc);
+		writer.close();
+	}
+	
+	
+	public final void writeGrandPaList() throws IOException {
+		grandpaFilePath = dirPath + "grandPa" + ID + ".xml";
 		XMLWriter writer = null;
 		File file = new File(grandpaFilePath);
-		OutputFormat format = OutputFormat.createPrettyPrint();
-		format.setEncoding("UTF-8");
 		
+		OutputFormat format =OutputFormat.createPrettyPrint();
+		format.setEncoding("UTF-8");
+		format.setExpandEmptyElements(true);
+        format.setTrimText(false);
+        format.setIndent(" ");
+        
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
+		Document doc = DocumentHelper.createDocument();
+		Element root = doc.addElement("add");
+		
+		ListIterator<GrandPaData> grandPaIter = grandPaList.listIterator();
+		while (grandPaIter.hasNext()) {
+			GrandPaData grandPaData = grandPaIter.next();
+	
+			String label = grandPaData.getLabel();
+			int relation = grandPaData.getRelation();
+			String uri = grandPaData.getURI();
+			String relativeMappedString = grandPaData.getRelativeMappedString();
+			
+			Element segment = root.addElement("doc");
+			
+			Element uriElement = segment.addElement("field");
+			uriElement.addAttribute("name", "URI");
+			uriElement.setText(uri);
+			
+			Element relativeMappedStringElement = segment.addElement("field");
+			relativeMappedStringElement.addAttribute("name", "relativeMappedString");
+			relativeMappedStringElement.setText(relativeMappedString);
+			
+			
+			Element labelElement = segment.addElement("field");
+			labelElement.addAttribute("name", "label");
+			labelElement.setText(label);
+			
+			Element relationElement = segment.addElement("field");
+			relationElement.addAttribute("name", "relation");
+			relationElement.setText(new Integer(relation).toString());
+			
+		}
+
+		writer = new XMLWriter(new FileWriter(file), format);
+//		writer = new XMLWriter(System.out,format);
+		writer.write(doc);
+		writer.close();
 	}
 	public final void printToConsole() {
 		for (SelfData SelfData : selfList) {//测试该列表中是否有数据

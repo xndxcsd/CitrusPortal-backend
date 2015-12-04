@@ -37,7 +37,7 @@ public class Test {
 				if (matcher.match()) {
 					//	debug:
 					System.out.println("此次匹配是成功的");
-					//每一个 label匹配的数据都放在一个HashSet中
+					//每一个 label匹配的数据都放在一个ArrayList中
 					int startOfMatch = matcher.getStartOfMatch();
 					int endOfMatch = matcher.getEndOfMatch();
 					String stringOfMatch = matcher.getStringOfMatch();
@@ -45,15 +45,13 @@ public class Test {
 					MatchInRdf matchInRdf = new MatchInRdf(label, startOfMatch, endOfMatch, stringOfMatch, model);					
 					//执行匹配
 					matchInRdf.searchByLabel();
-					ArrayList<SonData> sonSet = matchInRdf.getSonList();
-					ArrayList<SelfData> selfSet = matchInRdf.getSelfList();
-					ArrayList<FatherData> fatherSet = matchInRdf.getFatherList();
-					ArrayList<GrandPaData> grandPaSet = matchInRdf.getGrandPaList();
+					ArrayList<SonData> sonList = matchInRdf.getSonList();
+					ArrayList<SelfData> selfList = matchInRdf.getSelfList();
+					ArrayList<FatherData> fatherList = matchInRdf.getFatherList();
+					ArrayList<GrandPaData> grandPaList = matchInRdf.getGrandPaList();
 					
-					XmlWriter xmlWriter = new XmlWriter(sonSet, selfSet, fatherSet, grandPaSet);
-//					xmlWriter.printToConsole();
-//					xmlWriter.writeSelfList();
-					xmlWriter.writeFatherList();
+					XmlWriter xmlWriter = new XmlWriter(sonList, selfList, fatherList, grandPaList);
+					xmlWriter.write();
 					//	debug: 只循环一次	
 //					break;
 				}
