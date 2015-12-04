@@ -23,12 +23,6 @@ public class Test {
 	private static String TAGFILEPATH = "C:\\Users\\csd\\Desktop\\CitrusTest1.1_modified杜.rdf";
 	private static String FILEPATH = "C:\\Users\\csd\\Desktop\\lab1010\\柑桔实用栽培技术.doc";
 	public static void main(String[] args) throws Exception {
-		String as = null;
-		String sa=null;
-		
-		System.out.println("objects.equals : "+Objects.equals(as, sa));
-		System.out.println(" == :"+as==sa);
-		
 		
 		long startime = System.currentTimeMillis();//figure time
 		
