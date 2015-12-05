@@ -38,7 +38,7 @@ public class Test {
 				MatchInFile matcher = new MatchInFile(label, stringBuilder);
 				if (matcher.match()) {
 					//	debug:
-					System.out.println("此次匹配是成功的");
+//					System.out.println("此次匹配是成功的");
 					//每一个 label匹配的数据都放在一个ArrayList中
 					int startOfMatch = matcher.getStartOfMatch();
 					int endOfMatch = matcher.getEndOfMatch();

@@ -92,7 +92,7 @@ public class MatchInRdf {
 		
 			int count =0;
 		while (selfStmtIter.hasNext()) {
-			System.out.println(" in self :"+count++);
+//			System.out.println(" in self :"+count++);
 			
 			//得到直接匹配的资源
 			Statement selfStmt = selfStmtIter.nextStatement();
@@ -117,7 +117,9 @@ public class MatchInRdf {
 	}
 	
 	private final void searchFatherData(StmtIterator preStmtIter) {
-		
+		if (!preStmtIter.hasNext()) {
+			//如果没有father那我们什么都不做。
+		}else {
 			ArrayList<FatherData> resultList = new ArrayList<>();
 			while (preStmtIter.hasNext()) {
 				//得到前驱资源
@@ -145,10 +147,13 @@ public class MatchInRdf {
 			}else {
 				this.fatherList.addAll(resultList);				
 			}
-		
+		}
 	}
 	
 	private final void searchGrandPaData(StmtIterator prePreStmtIter) {
+		if(!prePreStmtIter.hasNext()) {
+			//如果没有grandPa 那么什么都不做
+		}else {
 		ArrayList<GrandPaData> resultSet = new ArrayList<>();
 		while (prePreStmtIter.hasNext()) {
 			//得到前驱资源
@@ -175,11 +180,12 @@ public class MatchInRdf {
 		}else {
 			this.grandPaList.addAll(resultSet);
 		}
+		}
 	}
 	
 	private final void searchSonData(StmtIterator sonStmtIter) {
 		
-		ArrayList<SonData> resultList = new ArrayList<>();
+		ArrayList<SonData> resultList = new ArrayList<SonData>();
 		while (sonStmtIter.hasNext()) {
 			Statement sonStmt = sonStmtIter.nextStatement();
 			RDFNode sonNode =sonStmt.getObject();
