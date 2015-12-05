@@ -1,15 +1,25 @@
 package cn.edu.swu.lab1010.dataHolder;
 
+/**
+ * 持有grandpa数据
+ * 
+ * @author csd
+ *
+ */
 public final class GrandPaData extends Data {
-    public GrandPaData(String URI, String label) {
-        super(URI, label);
+	/**
+	 * 传入URI,label并新建对象
+	 */
 
-        // TODO Auto-generated constructor stub
-    }
+	public GrandPaData(String URI, String label) {
+		super(URI, label);
 
-    @Override
-    public int getRelation() {
-        // TODO Auto-generated method stub
-        return 2;
-    }
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public int getRelation() {
+		// TODO Auto-generated method stub
+		return 2;
+	}
 }

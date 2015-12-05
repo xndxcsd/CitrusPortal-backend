@@ -1,6 +1,15 @@
 package cn.edu.swu.lab1010.dataHolder;
 
-public class SonData extends Data{
+/**
+ * 持有son数据
+ * 
+ * @author csd
+ *
+ */
+public class SonData extends Data {
+	/**
+	 * 传入URI,label并新建对象
+	 */
 
 	public SonData(String URI, String label) {
 		super(URI, label);
